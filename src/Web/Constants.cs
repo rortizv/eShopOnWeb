@@ -7,3 +7,5 @@ public static class Constants
     public const string DEFAULT_USERNAME = "Guest";
     public const string BASKET_ID = "BasketId";
 }
+
+ // My third change
