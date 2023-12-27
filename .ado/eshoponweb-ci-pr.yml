@@ -1,38 +1,42 @@
+trigger:
+- main
 
-resources:
-  repositories:
-    - repository: self
-      trigger: none
+pool:
+  vmImage: 'windows-latest'
 
 stages:
 - stage: Build
-  displayName: Build .Net Core Solution
+  displayName: Build, Test, and Publish
   jobs:
   - job: Build
-    pool:
-      vmImage: windows-latest
+    displayName: 'Build, Test, and Publish Job'
     steps:
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core SDK'
+      inputs:
+        version: '6.x'
+
     - task: DotNetCoreCLI@2
-      displayName: Restore
+      displayName: 'Restore NuGet Packages'
       inputs:
         command: 'restore'
         projects: '**/*.sln'
         feedsToUse: 'select'
 
     - task: DotNetCoreCLI@2
-      displayName: Build
+      displayName: 'Build Solution'
       inputs:
         command: 'build'
         projects: '**/*.sln'
-    
+
     - task: DotNetCoreCLI@2
-      displayName: Test
+      displayName: 'Run Tests'
       inputs:
         command: 'test'
         projects: 'tests/UnitTests/*.csproj'
-    
+
     - task: DotNetCoreCLI@2
-      displayName: Publish
+      displayName: 'Publish Artifacts'
       inputs:
         command: 'publish'
         publishWebProjects: true
